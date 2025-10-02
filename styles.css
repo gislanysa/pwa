@@ -177,6 +177,7 @@ nav .links.show {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 #camera-container.visible {
@@ -190,7 +191,6 @@ nav .links.show {
 }
 
 #camera-container button {
-    margin-top: 15px;
     padding: 12px 25px;
     border-radius: 50px;
     border: none;
@@ -200,10 +200,21 @@ nav .links.show {
     columns: #333;
     font-weight: 600;
     transition: background-color 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 #camera-container button:hover {
     background-color: #f0f0f0;
+}
+
+.camera-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2010;
+    display: flex;
+    gap: 15px;
 }
 
 #map {
