@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Viagem</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#007bff"/>
+</head>
+<body>
+    <nav>
+        <div class="menu">
+            <div class="hamburger" onclick="toggleMenu()">☰</div>
+            <h1>Meu Diário</h1>
+        </div>
+        <div class="links" id="menuLinks">
+            <a href="index.html">Check-in</a>
+            <a href="diario.html">Meu Diário</a>
+            <a href="mapa.html">Mapa</a>
+        </div>
+    </nav>
+
+    <main id="diario-list" class="main-content">
+        </main>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('menuLinks').classList.toggle('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const listContainer = document.getElementById('diario-list');
+            const checkins = JSON.parse(localStorage.getItem('travelCheckins')) || [];
+
+            if (checkins.length === 0) {
+                listContainer.innerHTML = '<p class="info-message">Você ainda não tem nenhum check-in salvo. Volte para a página de Check-in para começar!</p>';
+                return;
+            }
+
+            checkins.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'country-card';
+                card.innerHTML = `
+                    <h2>${item.country.name.common}</h2>
+                    <img src="${item.photo}" alt="Foto de ${item.country.name.common}" style="width: 100%; border-radius: 4px;">
+                    <p><strong>Cidade:</strong> ${item.city || "Não informada" }</p>
+                    <p><strong>Data:</strong> ${new Date(item.date).toLocaleDateString('pt-BR')}</p>
+                `;
+                listContainer.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
