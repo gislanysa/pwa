@@ -10,11 +10,13 @@
     <meta name="theme-color" content="#007bff"/>
 </head>
 <body>
+
     <nav>
         <div class="menu">
             <div class="hamburger" onclick="toggleMenu()">☰</div>
             <h1>Fazer Check-in</h1>
         </div>
+        
         <div class="links" id="menuLinks">
             <a href="index.html">Check-in</a>
             <a href="diario.html">Meu Diário</a>
@@ -25,15 +27,6 @@
     <main class="main-content">
         <button id="checkin-btn" class="main-button">Registrar Minha Localização</button>
         <div id="result-area"></div>
-        
-        <div id="camera-container" class="hidden">
-            <video id="camera-feed" autoplay></video>
-            <div class="camera-controls">
-                <button id="capture-btn">Capturar Foto</button>
-                <button id="cancel-btn">Cancelar</button>
-            </div>
-        </div>
-        <canvas id="photo-canvas" class="hidden"></canvas>
     </main>
 
     <script src="app.js" defer></script>

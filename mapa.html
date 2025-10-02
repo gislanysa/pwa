@@ -11,6 +11,7 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
+
     <nav>
         <div class="menu">
             <div class="hamburger" onclick="toggleMenu()">☰</div>
@@ -29,23 +30,57 @@
         function toggleMenu() {
             document.getElementById('menuLinks').classList.toggle('show');
         }
-
+        
         const map = L.map('map').setView([20, 0], 2); 
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        const checkins = JSON.parse(localStorage.getItem('travelCheckins')) || [];
-        checkins.forEach(item => {
+        const allCheckins = JSON.parse(localStorage.getItem('travelCheckins')) || [];
+        const groupedCheckins = allCheckins.reduce((acc, checkin) => {
+            const key = `${checkin.location.latitude}_${checkin.location.longitude}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    ...checkin,
+                    photos: []
+                };
+            }
+            acc[key].photos.push(checkin.photo);
+            return acc;
+        }, {});
+        
+        Object.values(groupedCheckins).forEach(group => {
             const popupContent = `
-                <h3>${item.country.name.common}</h3>
-                <p>${item.city || ''}</p>
-                <img src="${item.photo}" width="150px">
+                <h3>${group.country.name.common}</h3>
+                <p>${group.city || ''}</p>
+                <img src="${group.photos[0]}" width="150px" id="popup-img-${group.location.latitude}_${group.location.longitude}">
             `;
-            L.marker([item.location.latitude, item.location.longitude])
+
+            const marker = L.marker([group.location.latitude, group.location.longitude])
               .addTo(map)
               .bindPopup(popupContent);
+
+            let slideshowInterval; 
+            let currentPhotoIndex = 0;
+
+            marker.on('mouseover', function () {
+                this.openPopup();
+                
+                if (group.photos.length > 1) {
+                    slideshowInterval = setInterval(() => {
+                        currentPhotoIndex = (currentPhotoIndex + 1) % group.photos.length;
+                        const imgElement = document.getElementById(`popup-img-${group.location.latitude}_${group.location.longitude}`);
+                        if (imgElement) {
+                            imgElement.src = group.photos[currentPhotoIndex];
+                        }
+                    }, 2000); 
+                }
+            });
+            marker.on('mouseout', function () {
+                this.closePopup();
+                clearInterval(slideshowInterval); 
+            });
         });
     </script>
 </body>
