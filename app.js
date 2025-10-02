@@ -79,12 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function startCamera() {
-        cameraContainer.classList.remove('visible');
+        cameraContainer.classList.remove('hidden');
+        cameraContainer.classList.add('visible');
         try {
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             videoFeed.srcObject = stream;
         } catch (err) {
-            cameraContainer.classList.add('visible');
+            cameraContainer.classList.remove('visible');
             alert("Não foi possível acessar a câmera.");
         }
     }
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
-        cameraContainer.classList.add('visible');
+        cameraContainer.classList.remove('visible');
     }
 
     function saveCheckin(photoData) {
